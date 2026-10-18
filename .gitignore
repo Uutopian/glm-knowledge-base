@@ -1,0 +1,9 @@
+.env
+*.bak
+*.bak2
+*.bak3
+*.bak4
+*.bak5
+__pycache__/
+.idea/
+*.pyc
