@@ -21,7 +21,7 @@ def get_retriever():
     embedding=ZhipuAIEmbeddings()
 
     #向量库持久化路径(建议改成绝对路径,避免随运行目录漂移)
-    persist_directory='../vector_db/chroma'
+    persist_directory='./vector_db/chroma'
     #加载已有的向量数据库(只加载,不重建、不重复入库)
     vectordb=Chroma(
         persist_directory=persist_directory,

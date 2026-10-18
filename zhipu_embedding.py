@@ -1,7 +1,7 @@
 from __future__ import annotations
 import logging
 from typing import Dict,List,Any
-from langchain.embeddings.base import Embeddings
+from langchain_core.embeddings import Embeddings
 from pydantic import BaseModel,root_validator
 logger=logging.getLogger(__name__)
 

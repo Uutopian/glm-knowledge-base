@@ -1,0 +1,1 @@
+invalid type: string "{\"prompt\":QA_CHAIN_PROMPT}) \n    result = qa_chain({\"query\": question}) \n    return result[\"result\"] \n然后，添加⼀个单选按钮部件st.radio，选择进⾏问答的模式：\nNone ：不使⽤检索问答的普通模式\nqa_chain ：不带历史记录的检索问答模式\nchat_qa_chain ：带历史记录的检索问答模式\nselected_method = st.radio( \n�
