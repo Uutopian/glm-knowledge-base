@@ -7,3 +7,5 @@
 __pycache__/
 .idea/
 *.pyc
+
+knowledge_db/
