@@ -2,6 +2,7 @@
 
 import streamlit as st
 from zhipuai import ZhipuAI
+import json
 import os
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
@@ -17,6 +18,26 @@ _=load_dotenv(find_dotenv())
 api_key=os.getenv("API_KEY")
 sys.path.append("../FastAPIProject")
 ##########定义函数,返回一个检索器##########
+# ========== 历史对话持久化:每轮对话写进 json,启动时读回 ==========
+
+HISTORY_FILE = 'chat_history.json'
+
+def load_history():
+    """启动时从 json 文件读取历史对话(跨刷新/跨重启记忆)"""
+    if os.path.exists(HISTORY_FILE):
+        try:
+            with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except (json.JSONDecodeError, OSError):
+            return []          # 文件损坏时宁可空开始,不让应用崩
+    return []
+
+def save_history(messages):
+    """每轮对话后把历史写回 json 文件"""
+    with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
+        json.dump(messages, f, ensure_ascii=False, indent=2)
+
+
 def get_retriever():
     embedding=ZhipuAIEmbeddings()
 
@@ -104,7 +125,7 @@ def main():
     # st.session_state 存储用户与应用交互期间的状态与数据
     # 注意:必须是 "not in" —— 不存在才初始化;原来写成 in 会把历史反复清空
     if "messages" not in st.session_state:
-        st.session_state.messages=[]
+        st.session_state.messages=load_history()
     # 存储检索问答链(只构建一次)
     if "qa_history_chain" not in st.session_state:
         st.session_state.qa_history_chain=get_qa_history_chain()
@@ -117,6 +138,7 @@ def main():
 
     if prompt := st.chat_input("Say something"):
         st.session_state.messages.append(("human",prompt))
+        save_history(st.session_state.messages)
 
         with messages.chat_message("human"):
             st.write(prompt)
@@ -134,6 +156,7 @@ def main():
             st.markdown(full_text)
 
         st.session_state.messages.append(("ai",full_text))
+        save_history(st.session_state.messages)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ from __future__ import annotations
 import logging
 from typing import Dict,List,Any
 from langchain_core.embeddings import Embeddings
-from pydantic import BaseModel,root_validator
+from pydantic import BaseModel,root_validator  #数据使用规则
 logger=logging.getLogger(__name__)
 
 #定义一个继承Embeddings类的自定义Embeddings类
